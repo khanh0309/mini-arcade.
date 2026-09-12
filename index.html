@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#070b16" />
-  <meta name="description" content="Mini Arcade gồm 5 game đơn giản chơi ngay trên trình duyệt." />
+  <meta name="description" content="Mini Arcade gồm 7 game đơn giản chơi ngay trên trình duyệt." />
   <title>Mini Arcade</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon-192.png" />
@@ -15,15 +15,20 @@
     <header class="hero">
       <div>
         <div class="eyebrow">🎮 MINI ARCADE</div>
-        <h1>5 game nhỏ, mở link là chơi.</h1>
-        <p>Chơi trên PC hoặc điện thoại. Điểm cao được lưu ngay trên thiết bị của người chơi.</p>
+        <h1>7 game nhỏ, mở link là chơi.</h1>
+        <p>Chơi trên PC hoặc điện thoại, có nhạc nền và bảng xếp hạng online theo từng game.</p>
+        <div class="hero-user">Đang chơi với tên <strong id="currentUser">—</strong><span class="online-badge">🏆 Online leaderboard</span></div>
       </div>
-      <button id="installBtn" class="ghost-btn install-btn" hidden>Cài như ứng dụng</button>
+      <div class="hero-actions">
+        <button id="profileBtn" class="profile-btn">👤 Đổi username</button>
+        <button class="ghost-btn" data-sound-toggle>🔊 Âm thanh</button>
+        <button id="installBtn" class="ghost-btn install-btn" hidden>Cài như ứng dụng</button>
+      </div>
     </header>
 
     <section class="toolbar">
       <input id="search" type="search" placeholder="Tìm game..." autocomplete="off" />
-      <div class="status-pill"><span class="dot"></span> 5 game sẵn sàng</div>
+      <div class="status-pill"><span class="dot"></span> 7 game sẵn sàng</div>
     </section>
 
     <main>
@@ -31,13 +36,23 @@
     </main>
 
     <footer>
-      <span>Mini Arcade v1</span>
-      <span>•</span>
-      <span>Không cần đăng nhập</span>
-      <span>•</span>
-      <span>Thiết kế modular để thêm game mới sau này</span>
+      <span>Mini Arcade v2</span><span>•</span><span>7 game</span><span>•</span><span>Nhạc + SFX</span><span>•</span><span>Leaderboard theo username</span>
     </footer>
   </div>
+
+  <div class="profile-modal" id="profileModal">
+    <div class="profile-card">
+      <div class="big-icon">🕹️</div>
+      <h2>Chào mừng đến Mini Arcade</h2>
+      <p>Nhập username để điểm của bạn được lưu vào bảng xếp hạng của từng game. Bạn có thể đổi tên sau.</p>
+      <label for="usernameInput">USERNAME</label>
+      <input id="usernameInput" maxlength="18" autocomplete="nickname" placeholder="Ví dụ: Quynh0309" />
+      <div class="profile-error" id="profileError"></div>
+      <div class="profile-actions"><button class="play-btn" id="enterArcade">Vào Arcade →</button></div>
+    </div>
+  </div>
+
+  <script src="./assets/audio.js"></script>
   <script src="./assets/app.js"></script>
 </body>
 </html>

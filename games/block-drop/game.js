@@ -4,16 +4,16 @@ let board,piece,score=0,lines=0,best=+(localStorage.getItem('arcade_best_blocks'
 function empty(){return Array.from({length:ROW},()=>Array(COL).fill(-1))}
 function newPiece(){let i=Math.floor(Math.random()*shapes.length);piece={m:shapes[i].map(r=>r.slice()),x:Math.floor(COL/2)-2,y:0,color:i};if(collide(piece.x,piece.y,piece.m))over()}
 function reset(){board=empty();score=0;lines=0;dropMs=650;scoreEl.textContent=0;linesEl.textContent=0;newPiece();draw()}
-function start(){if(!running){running=true;last=performance.now();acc=0;ov.classList.add('hidden');requestAnimationFrame(loop)}}
+function start(){if(!running){running=true;window.ArcadeAudio?.startMusic();last=performance.now();acc=0;ov.classList.add('hidden');requestAnimationFrame(loop)}}
 function restart(){running=false;reset();start()}
 function collide(px,py,m){for(let y=0;y<m.length;y++)for(let x=0;x<m[y].length;x++)if(m[y][x]){let bx=px+x,by=py+y;if(bx<0||bx>=COL||by>=ROW||(by>=0&&board[by][bx]!==-1))return true}return false}
 function merge(){piece.m.forEach((r,y)=>r.forEach((v,x)=>{if(v&&piece.y+y>=0)board[piece.y+y][piece.x+x]=piece.color}));clearLines();newPiece()}
-function clearLines(){let n=0;for(let y=ROW-1;y>=0;y--){if(board[y].every(v=>v!==-1)){board.splice(y,1);board.unshift(Array(COL).fill(-1));n++;y++}}if(n){lines+=n;score+=[0,100,300,500,800][n]||1000;dropMs=Math.max(160,650-lines*18);scoreEl.textContent=score;linesEl.textContent=lines;best=Math.max(best,score);localStorage.setItem('arcade_best_blocks',best);bestEl.textContent=best}}
+function clearLines(){let n=0;for(let y=ROW-1;y>=0;y--){if(board[y].every(v=>v!==-1)){board.splice(y,1);board.unshift(Array(COL).fill(-1));n++;y++}}if(n){lines+=n;score+=[0,100,300,500,800][n]||1000;dropMs=Math.max(160,650-lines*18);scoreEl.textContent=score;linesEl.textContent=lines;best=Math.max(best,score);localStorage.setItem('arcade_best_blocks',best);bestEl.textContent=best;window.ArcadeAudio?.sfx('line')}}
 function move(dx){if(!running)start();if(!collide(piece.x+dx,piece.y,piece.m))piece.x+=dx;draw()}
 function down(){if(!running)start();if(!collide(piece.x,piece.y+1,piece.m))piece.y++;else merge();draw()}
-function rotate(){if(!running)start();let m=piece.m[0].map((_,i)=>piece.m.map(r=>r[i]).reverse());for(const kick of [0,-1,1,-2,2])if(!collide(piece.x+kick,piece.y,m)){piece.x+=kick;piece.m=m;break}draw()}
-function hardDrop(){if(!running)start();let d=0;while(!collide(piece.x,piece.y+1,piece.m)){piece.y++;d++}score+=d*2;scoreEl.textContent=score;merge();draw()}
-function over(){running=false;best=Math.max(best,score);localStorage.setItem('arcade_best_blocks',best);bestEl.textContent=best;ovT.textContent='Game Over';ovX.textContent=`Điểm: ${score} • Dòng: ${lines} • Kỷ lục: ${best}`;btn.textContent='Chơi lại';ov.classList.remove('hidden')}
+function rotate(){if(!running)start();window.ArcadeAudio?.sfx('move');let m=piece.m[0].map((_,i)=>piece.m.map(r=>r[i]).reverse());for(const kick of [0,-1,1,-2,2])if(!collide(piece.x+kick,piece.y,m)){piece.x+=kick;piece.m=m;break}draw()}
+function hardDrop(){if(!running)start();window.ArcadeAudio?.sfx('click');let d=0;while(!collide(piece.x,piece.y+1,piece.m)){piece.y++;d++}score+=d*2;scoreEl.textContent=score;merge();draw()}
+function over(){running=false;best=Math.max(best,score);localStorage.setItem('arcade_best_blocks',best);bestEl.textContent=best;window.ArcadeAudio?.sfx('gameover');ovT.textContent='Game Over';ovX.textContent=`Điểm: ${score} • Dòng: ${lines} • Kỷ lục: ${best}`;btn.textContent='Chơi lại';ov.classList.remove('hidden');window.ArcadeLeaderboard?.show('block-drop',score,{title:'Block Drop'})}
 function loop(t){if(!running)return;let dt=t-last;last=t;acc+=dt;if(acc>=dropMs){acc=0;down()}draw();requestAnimationFrame(loop)}
 function cell(x,y,color){g.fillStyle=colors[color];g.fillRect(x*S+2,y*S+2,S-4,S-4);g.fillStyle='rgba(255,255,255,.18)';g.fillRect(x*S+5,y*S+5,S-10,4)}
 function draw(){g.fillStyle='#07101c';g.fillRect(0,0,c.width,c.height);g.strokeStyle='rgba(130,160,210,.08)';for(let x=1;x<COL;x++){g.beginPath();g.moveTo(x*S,0);g.lineTo(x*S,c.height);g.stroke()}for(let y=1;y<ROW;y++){g.beginPath();g.moveTo(0,y*S);g.lineTo(c.width,y*S);g.stroke()}board.forEach((r,y)=>r.forEach((v,x)=>{if(v!==-1)cell(x,y,v)}));if(piece)piece.m.forEach((r,y)=>r.forEach((v,x)=>{if(v&&piece.y+y>=0)cell(piece.x+x,piece.y+y,piece.color)}))}
