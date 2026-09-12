@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#070b16" />
+  <meta name="description" content="Mini Arcade gồm 5 game đơn giản chơi ngay trên trình duyệt." />
+  <title>Mini Arcade</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon-192.png" />
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">🎮 MINI ARCADE</div>
+        <h1>5 game nhỏ, mở link là chơi.</h1>
+        <p>Chơi trên PC hoặc điện thoại. Điểm cao được lưu ngay trên thiết bị của người chơi.</p>
+      </div>
+      <button id="installBtn" class="ghost-btn install-btn" hidden>Cài như ứng dụng</button>
+    </header>
+
+    <section class="toolbar">
+      <input id="search" type="search" placeholder="Tìm game..." autocomplete="off" />
+      <div class="status-pill"><span class="dot"></span> 5 game sẵn sàng</div>
+    </section>
+
+    <main>
+      <section id="gameGrid" class="game-grid" aria-live="polite"></section>
+    </main>
+
+    <footer>
+      <span>Mini Arcade v1</span>
+      <span>•</span>
+      <span>Không cần đăng nhập</span>
+      <span>•</span>
+      <span>Thiết kế modular để thêm game mới sau này</span>
+    </footer>
+  </div>
+  <script src="./assets/app.js"></script>
+</body>
+</html>
