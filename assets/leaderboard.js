@@ -95,19 +95,20 @@
     const sort = options.sort === 'asc' ? 'asc' : 'desc';
     const title = options.title || 'Kết quả';
     const suffix = options.suffix || '';
+    const earnedCoins = window.ArcadeEconomy?.awardFromGame(game, score) || 0;
     const modal = ensureModal();
     const status = modal.querySelector('#leaderboardStatus');
     const rows = modal.querySelector('#leaderboardRows');
     modal.querySelector('#leaderboardTitle').textContent = title;
-    status.textContent = `Điểm của ${getUsername()}: ${Math.round(score).toLocaleString('vi-VN')}${suffix}. Đang cập nhật...`;
+    status.textContent = `Điểm của ${getUsername()}: ${Math.round(score).toLocaleString('vi-VN')}${suffix}. 🪙 +${earnedCoins} coin. Đang cập nhật...`;
     rows.innerHTML = '<div class="leaderboard-loading">Đang tải bảng xếp hạng...</div>';
     modal.classList.remove('hidden');
     const result = await submit(game, score, sort);
     const list = Array.isArray(result.leaderboard) ? result.leaderboard : [];
     const me = getUsername().toLowerCase();
     status.textContent = result.local
-      ? `Đang hiển thị bảng xếp hạng trên thiết bị này. Hạng của bạn: #${result.rank || '—'}`
-      : `Đã lưu lên bảng xếp hạng online. Hạng của bạn: #${result.rank || '—'}`;
+      ? `🪙 +${earnedCoins} coin • Bảng xếp hạng trên thiết bị này • Hạng: #${result.rank || '—'}`
+      : `🪙 +${earnedCoins} coin • Đã lưu online • Hạng: #${result.rank || '—'}`;
     rows.innerHTML = list.length ? list.slice(0, 10).map((item, i) => `
       <div class="leaderboard-row ${String(item.username).toLowerCase() === me ? 'me' : ''}">
         <span class="rank">${i < 3 ? ['🥇','🥈','🥉'][i] : '#' + (i+1)}</span>

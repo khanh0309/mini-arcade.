@@ -1,6 +1,6 @@
-const CACHE='mini-arcade-v3';
+const CACHE='mini-arcade-v7-shop-coins';
 const CORE=[
-  './','./index.html','./games.json','./assets/styles.css','./assets/app.js','./assets/game-shell.css','./assets/audio.js','./assets/leaderboard.js','./manifest.webmanifest','./icon-192.png','./icon-512.png',
+  './','./index.html','./games.json','./assets/styles.css','./assets/app.js','./assets/game-shell.css','./assets/audio.js','./assets/economy.js','./assets/leaderboard.js','./assets/skins.js','./assets/shop.js','./manifest.webmanifest','./icon-192.png','./icon-512.png',
   './games/snake/','./games/snake/index.html','./games/snake/game.js',
   './games/sky-flap/','./games/sky-flap/index.html','./games/sky-flap/game.js',
   './games/dino-run/','./games/dino-run/index.html','./games/dino-run/game.js',
