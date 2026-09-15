@@ -1,4 +1,4 @@
-# Mini Arcade v2.5
+# Mini Arcade v2.5.1
 
 Mini Arcade chạy trên Netlify, gồm 8 game và bảng xếp hạng online theo username.
 
