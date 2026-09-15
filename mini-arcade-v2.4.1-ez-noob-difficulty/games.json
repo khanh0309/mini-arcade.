@@ -1,0 +1,9 @@
+[
+  {"id":"snake","name":"Neon Snake","icon":"🐍","tag":"Arcade","description":"Ăn mồi, dài hơn và tránh va tường hoặc tự cắn mình.","path":"./games/snake/","accent":"#63e7b4","storageKey":"arcade_best_snake","scoreLabel":"Kỷ lục"},
+  {"id":"sky-flap","name":"Sky Flap","icon":"🐦","tag":"Reflex","description":"Chạm để bay và luồn qua các cặp cột càng lâu càng tốt.","path":"./games/sky-flap/","accent":"#7cc7ff","storageKey":"arcade_best_flap","scoreLabel":"Kỷ lục"},
+  {"id":"dino-run","name":"Dino Run","icon":"🦖","tag":"Runner","description":"Nhảy qua chướng ngại vật và sống sót khi tốc độ tăng dần.","path":"./games/dino-run/","accent":"#ffd166","storageKey":"arcade_best_dino","scoreLabel":"Kỷ lục"},
+  {"id":"sliding-puzzle","name":"Sliding Puzzle","icon":"🧩","tag":"Puzzle","description":"Sắp các ô số về đúng thứ tự với số bước di chuyển ít nhất.","path":"./games/sliding-puzzle/","accent":"#c89bff","storageKey":"arcade_best_puzzle","scoreLabel":"Ít bước nhất"},
+  {"id":"block-drop","name":"Block Drop","icon":"🧱","tag":"Classic","description":"Xếp các khối, hoàn thành hàng và đừng để chạm nóc.","path":"./games/block-drop/","accent":"#ff8aa5","storageKey":"arcade_best_blocks","scoreLabel":"Kỷ lục"},
+  {"id":"racing","name":"Road Rush","icon":"🏎️","tag":"Racing","description":"Lái xe né ô tô và chướng ngại vật khi tốc độ tăng dần.","path":"./games/racing/","accent":"#ff9f43","storageKey":"arcade_best_racing","scoreLabel":"Quãng đường"},
+  {"id":"chicken-crossing","name":"Chicken Crossing","icon":"🐔","tag":"Crossing","description":"Đưa gà băng qua nhiều làn xe đang chạy mà không bị va chạm.","path":"./games/chicken-crossing/","accent":"#f9e26b","storageKey":"arcade_best_chicken","scoreLabel":"Điểm"}
+]

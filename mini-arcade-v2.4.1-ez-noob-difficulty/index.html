@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#070b16" />
+  <meta name="description" content="Mini Arcade gồm 7 game đơn giản chơi ngay trên trình duyệt." />
+  <title>Mini Arcade</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon-192.png" />
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">🎮 MINI ARCADE</div>
+        <h1>7 game nhỏ, cày coin, mua trang phục và leo bảng xếp hạng.</h1>
+        <p>Chơi để nhận coin, mở khóa skin mới, nghe nhạc nền và tranh hạng với bạn bè.</p>
+        <div class="hero-user">Đang chơi với tên <strong id="currentUser">—</strong><span class="online-badge">🏆 Online leaderboard</span></div>
+      </div>
+      <div class="hero-actions">
+        <button id="profileBtn" class="profile-btn">👤 Đổi username</button><button id="shopBtn" class="profile-btn">🛍️ Shop trang phục</button><span class="coin-chip">🪙 <span data-coin-balance>0</span></span>
+        <button class="ghost-btn" data-sound-toggle>🔊 Âm thanh</button>
+        <button id="installBtn" class="ghost-btn install-btn" hidden>Cài như ứng dụng</button>
+      </div>
+    </header>
+
+    <section class="toolbar">
+      <input id="search" type="search" placeholder="Tìm game..." autocomplete="off" />
+      <div class="status-pill"><span class="dot"></span> 7 game sẵn sàng</div>
+    </section>
+
+    <main>
+      <section id="gameGrid" class="game-grid" aria-live="polite"></section>
+    </main>
+
+    <footer>
+      <span>Mini Arcade v2.4.1</span><span>•</span><span>7 game</span><span>•</span><span>Nhạc + SFX</span><span>•</span><span>Coin + Shop + Leaderboard + Difficulty Curve</span>
+    </footer>
+  </div>
+
+  <div class="profile-modal" id="profileModal">
+    <div class="profile-card">
+      <div class="big-icon">🕹️</div>
+      <h2>Chào mừng đến Mini Arcade</h2>
+      <p>Nhập username để điểm của bạn được lưu vào bảng xếp hạng của từng game. Bạn có thể đổi tên sau.</p>
+      <label for="usernameInput">USERNAME</label>
+      <input id="usernameInput" maxlength="18" autocomplete="nickname" placeholder="Ví dụ: Quynh0309" />
+      <div class="profile-error" id="profileError"></div>
+      <div class="profile-actions"><button class="play-btn" id="enterArcade">Vào Arcade →</button></div>
+    </div>
+  </div>
+
+  <script src="./assets/audio.js"></script>
+  <script src="./assets/economy.js"></script>
+  <script src="./assets/skins.js"></script>
+  <script src="./assets/shop.js"></script>
+  <script src="./assets/app.js"></script>
+</body>
+</html>
