@@ -1,7 +1,7 @@
 (() => {
   const USER_KEY = 'arcade_username';
   const API = '/.netlify/functions/leaderboard';
-  const PINNED = { username: 'ez noob', score: 50000, pinned: true };
+  const PINNED = { username: 'ez noob', score: 10000000, pinned: true };
 
   function cleanName(value) {
     return String(value || '').normalize('NFKC').replace(/[^\p{L}\p{N}_. -]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 18);

@@ -1,6 +1,6 @@
 import { getStore } from '@netlify/blobs';
 
-const OWNER = { username: 'ez noob', score: 50000, pinned: true };
+const OWNER = { username: 'ez noob', score: 10000000, pinned: true };
 const allowed = {
   'snake': 'desc',
   'sky-flap': 'desc',
@@ -62,7 +62,7 @@ export default async (req) => {
   const mode = allowed[gameId];
   const key = `leaderboard/${gameId}`;
 
-  // Tài khoản chủ được ghim cố định 50.000 điểm ở hạng #1 cho mọi game.
+  // Tài khoản chủ được ghim cố định 10.000.000 điểm ở hạng #1 cho mọi game.
   if (isOwner(username)) {
     const stored = await store.get(key, { type: 'json', consistency: 'strong' }) || [];
     return json({ leaderboard: publicBoard(Array.isArray(stored) ? stored : [], mode).slice(0, 20), rank: 1 });

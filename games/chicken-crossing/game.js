@@ -4,7 +4,8 @@ const ov = document.getElementById('overlay'), ovT = document.getElementById('ov
 const COLS=12, ROWS=10, CELL=65, lanes=[1,2,3,4,5,6,7,8];
 // Mở lane từ gần người chơi ra xa: đầu game chỉ có 4 lane xe, sau đó tăng dần lên 8.
 const unlockOrder=[7,6,5,4,3,2,1,0];
-let chicken, cars, score, crossings, best=+(localStorage.getItem('arcade_best_chicken')||0), running=false, last=0, touchStart=null, bounce=0, elapsed=0, difficulty=0, safeUntil=0;
+let chicken, cars, score, crossings, best=+(localStorage.getItem('arcade_best_chicken')||0), running=false, last=0, touchStart=null, bounce=0, elapsed=0, difficulty=0, lastMoveAt=0;
+const MOVE_COOLDOWN_MS=75;
 bestEl.textContent=best;
 
 // V2.4.2: giảm tốc độ đầu game và tăng khoảng trống. Khó tăng dần theo thời gian + số lần qua đường.
@@ -24,7 +25,7 @@ function activeLaneCount(){
 }
 function laneActive(laneIndex){ return unlockOrder.slice(0,activeLaneCount()).includes(laneIndex); }
 function reset(){
-  chicken={col:5,row:9}; score=0; crossings=0; cars=[]; bounce=0; elapsed=0; difficulty=0; safeUntil=performance.now()+900;
+  chicken={col:5,row:9}; score=0; crossings=0; cars=[]; bounce=0; elapsed=0; difficulty=0; lastMoveAt=0;
   laneCfg.forEach((cfg,i)=>{
     // Chỉ 1-2 xe/lane với khoảng trống lớn, offset khác nhau để tránh tạo "bức tường" xe.
     for(let pos=-cfg.gap; pos<c.width+cfg.gap; pos+=cfg.gap){
@@ -33,24 +34,47 @@ function reset(){
   });
   scoreEl.textContent=0; crossEl.textContent=0; draw();
 }
-function start(){ if(running) return; running=true; window.ArcadeAudio?.startMusic(); last=performance.now(); safeUntil=performance.now()+900; ov.classList.add('hidden'); requestAnimationFrame(loop); }
+function start(){ if(running) return; running=true; window.ArcadeAudio?.startMusic(); last=performance.now(); lastMoveAt=0; ov.classList.add('hidden'); requestAnimationFrame(loop); }
 function restart(){ running=false; reset(); start(); }
+// Hitbox nhỏ hơn hình vẽ để va chạm công bằng hơn.
+function chickenRectAt(col,row){ return {x:col*CELL+22,y:row*CELL+20,w:22,h:25}; }
+function chickenRect(){ return chickenRectAt(chicken.col,chicken.row); }
+function hit(a,b){ return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y; }
+function carRect(car){
+  const y=car.row*CELL+(CELL-car.h)/2;
+  return {x:car.x+7,y:y+3,w:Math.max(12,car.w-14),h:Math.max(12,car.h-6)};
+}
+function collidesAt(col,row){
+  if(row<=0 || row>=ROWS-1) return false;
+  const cr=chickenRectAt(col,row);
+  for(const car of cars){
+    if(!laneActive(car.lane) || car.row!==row) continue;
+    if(hit(cr,carRect(car))) return true;
+  }
+  return false;
+}
 function move(dx,dy){
   if(!running) start();
+  const now=performance.now();
+  // Chặn spam input làm gà "dịch chuyển" qua nhiều lane giữa hai frame va chạm.
+  if(now-lastMoveAt < MOVE_COOLDOWN_MS) return;
+  lastMoveAt=now;
   const nc=Math.max(0,Math.min(COLS-1,chicken.col+dx)), nr=Math.max(0,Math.min(ROWS-1,chicken.row+dy));
   if(nc===chicken.col&&nr===chicken.row) return;
+  // Kiểm tra va chạm NGAY tại ô đích trước khi cho phép bước đi.
+  // Nhờ vậy spam ↑ liên tục vẫn bị xe tông nếu bước vào đúng vị trí xe.
+  if(collidesAt(nc,nr)) return over();
   chicken.col=nc; chicken.row=nr;
   if(dy<0) score+=2;
   window.ArcadeAudio?.sfx('move');
   if(chicken.row===0){
     crossings++; score+=100; crossEl.textContent=crossings; window.ArcadeAudio?.sfx('win');
-    chicken={col:5,row:9}; safeUntil=performance.now()+1000;
+    chicken={col:5,row:9};
+    // Không có "bất tử 1 giây" sau khi qua đường; hàng xuất phát vốn không có xe.
+    lastMoveAt=performance.now();
   }
   scoreEl.textContent=score;
 }
-// Hitbox nhỏ hơn hình vẽ để va chạm công bằng hơn.
-function chickenRect(){ return {x:chicken.col*CELL+22,y:chicken.row*CELL+20,w:22,h:25}; }
-function hit(a,b){ return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y; }
 function over(){
   running=false; best=Math.max(best,score); localStorage.setItem('arcade_best_chicken',best); bestEl.textContent=best;
   window.ArcadeAudio?.sfx('crash'); ovT.textContent='Ôi! Gà bị tông';
@@ -72,15 +96,12 @@ function loop(t){
     if(car.cfg.dir>0&&car.x>c.width+110) car.x=-car.w-wrapPad;
     if(car.cfg.dir<0&&car.x+car.w<-110) car.x=c.width+wrapPad;
   }
-  if(performance.now() >= safeUntil){
-    const cr=chickenRect();
-    for(const car of cars){
-      if(!laneActive(car.lane)) continue;
-      const y=car.row*CELL+(CELL-car.h)/2;
-      // Hitbox xe cũng co nhẹ hai bên cho cảm giác "suýt va" nhưng vẫn sống.
-      const carHit={x:car.x+7,y:y+3,w:Math.max(12,car.w-14),h:Math.max(12,car.h-6)};
-      if(car.row===chicken.row&&hit(cr,carHit)) return over();
-    }
+  const cr=chickenRect();
+  for(const car of cars){
+    if(!laneActive(car.lane)) continue;
+    // Kiểm tra mỗi frame VÀ kiểm tra ngay lúc bấm di chuyển ở move().
+    // Hai lớp này loại lỗi spam phím để xuyên xe.
+    if(car.row===chicken.row&&hit(cr,carRect(car))) return over();
   }
   draw(); requestAnimationFrame(loop);
 }

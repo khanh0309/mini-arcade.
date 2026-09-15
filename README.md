@@ -1,4 +1,4 @@
-# Mini Arcade v2.5.1
+# Mini Arcade v2.5.2
 
 Mini Arcade chạy trên Netlify, gồm 8 game và bảng xếp hạng online theo username.
 
@@ -61,14 +61,14 @@ Leaderboard này phù hợp cho nhóm bạn chơi thử, nhưng điểm được
 
 
 ## V2.4.2
-- Ghim tài khoản `ez noob` ở TOP 1 với 50.000 điểm cho cả 8 game.
+- Ghim tài khoản `ez noob` ở TOP 1 với 10.000.000 điểm cho cả 8 game.
 - Tất cả game có độ khó tăng dần theo thời gian/tiến độ chơi, bắt đầu ở mức khá dễ rồi tăng lên khó.
 - Chicken Crossing được cân bằng lại: xe chậm hơn, khoảng cách xe rộng hơn, hitbox gà nhỏ hơn; sau đó giao thông tăng dần.
 - Sliding Puzzle có cấp độ: mỗi lần hoàn thành, bàn tiếp theo được xáo khó hơn và BXH dùng điểm thay vì số bước.
 
 
 ## V2.4.2 hotfix
-- `ez noob` 50,000 được ghim ở UI lẫn backend cho cả 8 game, kể cả khi backend cũ chưa cập nhật.
+- `ez noob` 10.000.000 được ghim ở UI lẫn backend cho cả 8 game.
 - Chicken Crossing dễ hơn rõ rệt lúc đầu: 4 lane xe hoạt động, xe chậm hơn, khoảng trống lớn hơn, hitbox công bằng hơn; độ khó tăng từ từ tới 8 lane.
 - Service worker ưu tiên lấy JS/JSON mới từ mạng để giảm lỗi còn thấy bản cũ sau deploy.
 
@@ -81,7 +81,7 @@ Leaderboard này phù hợp cho nhóm bạn chơi thử, nhưng điểm được
 - `Online 1v1`: Create Room, Join Room bằng mã 4 ký tự, Quick Match và Rematch.
 - PC: A/D hoặc ←/→ để chạy, W/↑ để nhảy, F/Space/Enter để sút. Có nút cảm ứng cho điện thoại.
 - Thắng online: +120 coin; thua online: +30 coin. Practice cũng có coin thấp hơn.
-- Thêm Football Points vào leaderboard; `ez noob` vẫn được ghim 50.000 ở TOP 1.
+- Thêm Football Points vào leaderboard; `ez noob` vẫn được ghim 10.000.000 ở TOP 1.
 - Thêm skin Football vào Shop.
 
 ### Backend realtime mới
@@ -98,3 +98,12 @@ Sau khi upload V2.5 lên GitHub:
 8. Điền URL đó vào `games/arcade-football/config.js`, hoặc gửi URL cho ChatGPT để tạo V2.5.1.
 
 Nếu chưa cấu hình Render, **Practice vs CPU** và **Local 2 Players** vẫn hoạt động; Online sẽ báo chưa có server.
+
+
+## V2.5.2 — Chicken collision hotfix + owner score
+- Nâng điểm ghim của `ez noob` lên **10.000.000** cho toàn bộ 8 game, cả frontend và Netlify Function.
+- Sửa bug Chicken Crossing: spam phím/nút tiến lên quá nhanh có thể đổi nhiều hàng giữa hai frame va chạm và xuyên qua xe.
+- Mỗi lần di chuyển giờ kiểm tra hitbox ngay tại ô đích trước khi đổi vị trí.
+- Thêm input cooldown 75 ms để không thể dịch chuyển qua nhiều lane trong cùng một frame.
+- Bỏ khoảng "bất tử" sau khi bắt đầu/qua đường; hàng xuất phát không có xe nên không cần invincibility.
+- Giữ nguyên cân bằng dễ hơn ở đầu game và difficulty curve tăng dần.
