@@ -37,6 +37,7 @@
       case 'block-drop': return Math.max(1, Math.min(45, 2 + Math.floor(score/150)));
       case 'racing': return Math.max(1, Math.min(45, 2 + Math.floor(score/45)));
       case 'chicken-crossing': return Math.max(1, Math.min(45, 2 + Math.floor(score/35)));
+      case 'arcade-football': return Math.max(1, Math.min(45, 2 + Math.floor(score/120)));
       default: return 1;
     }
   }

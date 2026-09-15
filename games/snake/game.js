@@ -3,22 +3,25 @@ const c = document.getElementById('game'), x = c.getContext('2d');
 const S = 30, C = c.width / S;
 const scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
 const ov = document.getElementById('overlay'), ovT = document.getElementById('ovTitle'), ovX = document.getElementById('ovText'), startBtn = document.getElementById('startBtn');
-let snake, food, dir, next, score = 0, best = +(localStorage.getItem('arcade_best_snake') || 0), run = false, pause = false, timer, delay = 120;
+let snake, food, dir, next, score = 0, best = +(localStorage.getItem('arcade_best_snake') || 0), run = false, pause = false, timer, delay = 150, elapsed = 0;
 bestEl.textContent = best;
 
 function skin(){ return window.ArcadeSkins?.get('snake')?.colors || { head:'#8effb8', face:'#59df89', body:'#45d874', tail:'#2fb864', eye:'#ffffff', pupil:'#14261d', tongue:'#ff7aa0', glow:'rgba(81,255,159,.45)' }; }
-function reset(){ snake=[{x:14,y:15},{x:13,y:15},{x:12,y:15},{x:11,y:15}]; dir=next={x:1,y:0}; score=0; delay=120; spawn(); hud(); draw(); }
+function reset(){ snake=[{x:14,y:15},{x:13,y:15},{x:12,y:15},{x:11,y:15}]; dir=next={x:1,y:0}; score=0; delay=150; elapsed=0; spawn(); hud(); draw(); }
 function spawn(){ do{ food={x:Math.floor(Math.random()*S), y:Math.floor(Math.random()*S)}; }while(snake.some(p=>p.x===food.x&&p.y===food.y)); }
 function hud(){ scoreEl.textContent=score; bestEl.textContent=best; }
 function start(){ clearTimeout(timer); if(!run){ run=true; pause=false; window.ArcadeAudio?.startMusic(); ov.classList.add('hidden'); tickSoon(); } }
 function restart(){ clearTimeout(timer); reset(); run=true; pause=false; ov.classList.add('hidden'); tickSoon(); }
 function tickSoon(){ if(run && !pause) timer=setTimeout(tick,delay); }
 function tick(){
+  elapsed += delay / 1000;
+  const difficulty=Math.min(1, elapsed/90 + score/900);
+  delay=Math.max(60, Math.round(150 - difficulty*90));
   dir=next;
   const h={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
   if(h.x<0||h.x>=S||h.y<0||h.y>=S||snake.some((p,i)=>i<snake.length-1&&p.x===h.x&&p.y===h.y)) return over();
   snake.unshift(h);
-  if(h.x===food.x&&h.y===food.y){ score+=10; best=Math.max(best,score); localStorage.setItem('arcade_best_snake',best); delay=Math.max(55,120-Math.floor(score/40)*6); window.ArcadeAudio?.sfx('eat'); spawn(); }
+  if(h.x===food.x&&h.y===food.y){ score+=10; best=Math.max(best,score); localStorage.setItem('arcade_best_snake',best); window.ArcadeAudio?.sfx('eat'); spawn(); }
   else snake.pop();
   hud(); draw(); tickSoon();
 }

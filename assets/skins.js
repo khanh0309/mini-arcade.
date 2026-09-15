@@ -26,6 +26,11 @@
       {id:'red',name:'Crimson Racer',preview:'🏎️',price:0,colors:{player:'#ff3b30',glass:'#7ee7ff',light:'#ffe86b'}},
       {id:'blue',name:'Blue Storm',preview:'🔵',price:90,colors:{player:'#2f7cff',glass:'#b7ecff',light:'#fff1a0'}},
       {id:'lime',name:'Lime Flash',preview:'🟢',price:135,colors:{player:'#31c96d',glass:'#d2fff0',light:'#fff49d'}}
+    ]},
+    'arcade-football': { title:'Arcade Football', options:[
+      {id:'classic',name:'Red vs Blue',preview:'⚽',price:0,colors:{left:'#ef4457',right:'#4f7fff',left2:'#ffffff',right2:'#ffffff'}},
+      {id:'neon',name:'Neon Derby',preview:'✨',price:100,colors:{left:'#42e887',right:'#c16cff',left2:'#0b1d18',right2:'#ffffff'}},
+      {id:'sunset',name:'Sunset Cup',preview:'🌇',price:150,colors:{left:'#ff8c42',right:'#2fc6d0',left2:'#fff4cf',right2:'#e8ffff'}}
     ]}
   };
 

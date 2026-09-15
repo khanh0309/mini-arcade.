@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: mini-arcade-football
+    runtime: node
+    rootDir: football-server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: FRONTEND_URL
+        value: https://serene-gumdrop-00730c.netlify.app

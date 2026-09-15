@@ -5,7 +5,8 @@ const fallbackGames = [
   {id:'sliding-puzzle',name:'Sliding Puzzle',icon:'🧩',tag:'Puzzle',description:'Sắp các ô số về đúng thứ tự với số bước di chuyển ít nhất.',path:'./games/sliding-puzzle/',accent:'#c89bff',storageKey:'arcade_best_puzzle',scoreLabel:'Ít bước nhất'},
   {id:'block-drop',name:'Block Drop',icon:'🧱',tag:'Classic',description:'Xếp các khối, hoàn thành hàng và đừng để chạm nóc.',path:'./games/block-drop/',accent:'#ff8aa5',storageKey:'arcade_best_blocks',scoreLabel:'Kỷ lục'},
   {id:'racing',name:'Road Rush',icon:'🏎️',tag:'Racing',description:'Lái xe né ô tô, có thể đổi làn và đi lên/xuống để tránh va chạm.',path:'./games/racing/',accent:'#ff9f43',storageKey:'arcade_best_racing',scoreLabel:'Quãng đường'},
-  {id:'chicken-crossing',name:'Chicken Crossing',icon:'🐔',tag:'Crossing',description:'Đưa gà băng qua nhiều làn xe đang chạy mà không bị va chạm.',path:'./games/chicken-crossing/',accent:'#f9e26b',storageKey:'arcade_best_chicken',scoreLabel:'Điểm'}
+  {id:'chicken-crossing',name:'Chicken Crossing',icon:'🐔',tag:'Crossing',description:'Đưa gà băng qua nhiều làn xe đang chạy mà không bị va chạm.',path:'./games/chicken-crossing/',accent:'#f9e26b',storageKey:'arcade_best_chicken',scoreLabel:'Điểm'},
+  {id:'arcade-football',name:'Arcade Football',icon:'⚽',tag:'Online 1v1',description:'Practice CPU, Local 2 Players hoặc Online 1v1. Ai ghi 3 bàn trước thắng.',path:'./games/arcade-football/',accent:'#55d47c',storageKey:'arcade_best_football',scoreLabel:'Football Points'}
 ];
 
 const grid = document.getElementById('gameGrid');

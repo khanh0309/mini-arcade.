@@ -3,11 +3,11 @@ const c = document.getElementById('game'), g = c.getContext('2d');
 const scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
 const ov = document.getElementById('overlay'), ovT = document.getElementById('ovTitle'), ovX = document.getElementById('ovText'), btn = document.getElementById('startBtn');
 const ground = 340;
-let dino, obs, score, best = +(localStorage.getItem('arcade_best_dino') || 0), running = false, last = 0, nextSpawn = 0, speed = 300, tick = 0;
+let dino, obs, score, best = +(localStorage.getItem('arcade_best_dino') || 0), running = false, last = 0, nextSpawn = 0, speed = 280, tick = 0, elapsed = 0, difficulty = 0;
 bestEl.textContent = best;
 function skin(){ return window.ArcadeSkins?.get('dino-run')?.colors || { tail:'#1a9c62', body1:'#5df0a0', body2:'#2cb86d', belly:'#c8ffe0', head:'#5ef0a4', neck:'#41d685', spike:'#d4ff6a', eye:'#102117', outline:'#168451' }; }
 function makeDino(){ return { x:95, y:ground-60, vy:0, baseW:56, baseH:60, w:56, h:60, duck:false, on:true, duckHold:false }; }
-function reset(){ dino = makeDino(); obs=[]; score=0; speed=300; nextSpawn=.9; tick=0; scoreEl.textContent=0; draw(); }
+function reset(){ dino = makeDino(); obs=[]; score=0; speed=280; nextSpawn=1.2; tick=0; elapsed=0; difficulty=0; scoreEl.textContent=0; draw(); }
 function start(){ if(!running){ running=true; window.ArcadeAudio?.startMusic(); last=performance.now(); ov.classList.add('hidden'); requestAnimationFrame(loop); } }
 function restart(){ running=false; reset(); start(); }
 function setDuck(on){ dino.duckHold = on; if(on && dino.on){ dino.duck=true; dino.h=34; dino.w=68; dino.y=ground-dino.h; } else if(!on){ dino.duck=false; dino.h=60; dino.w=56; dino.y=Math.min(dino.y, ground-dino.h); } }
@@ -15,20 +15,22 @@ function jump(){ if(!running) start(); if(dino.on){ dino.vy=-690; dino.on=false;
 function over(){ running=false; const finalScore=Math.floor(score); best=Math.max(best,finalScore); localStorage.setItem('arcade_best_dino',best); bestEl.textContent=best; window.ArcadeAudio?.sfx('gameover'); ovT.textContent='Game Over'; ovX.textContent=`Điểm: ${finalScore} • Kỷ lục: ${best}`; btn.textContent='Chơi lại'; ov.classList.remove('hidden'); window.ArcadeLeaderboard?.show('dino-run',finalScore,{title:'Dino Run'}); }
 function hit(a,b){ return a.x+8<b.x+b.w&&a.x+a.w-8>b.x&&a.y+8<b.y+b.h&&a.y+a.h>b.y+5; }
 function spawnObstacle(){
-  const flyingChance = score > 18 ? Math.min(.46, .12 + score / 220) : 0;
+  const flyingChance = elapsed > 12 ? (.07 + difficulty*.34) : 0;
   if(Math.random() < flyingChance){
     const level = Math.random();
-    const y = level < .35 ? ground-44 : level < .7 ? ground-78 : ground-112;
+    let y;
+    if(difficulty < .35) y = level < .6 ? ground-126 : ground-96;
+    else y = level < (.16 + difficulty*.22) ? ground-60 : level < .72 ? ground-96 : ground-126;
     obs.push({ type:'bird', x:c.width+30, y, w:54, h:32, flap:Math.random()*Math.PI*2 });
   } else {
-    const tall=Math.random()>.55;
+    const tall=Math.random() < (.35 + difficulty*.25);
     obs.push({ type:'cactus', x:c.width+30, y:ground-(tall?74:50), w:tall?34:30, h:tall?74:50 });
   }
-  nextSpawn = Math.max(.5, .9 - score/180) + Math.random() * .75;
+  nextSpawn = (1.25 - difficulty*.58) + Math.random() * (.62 - difficulty*.18);
 }
 function loop(t){
   if(!running) return;
-  const dt=Math.min(.033,(t-last)/1000); last=t; tick+=dt*8; score += dt*10; scoreEl.textContent=Math.floor(score); speed=Math.min(640,300+score*1.9);
+  const dt=Math.min(.033,(t-last)/1000); last=t; elapsed+=dt; tick+=dt*8; score += dt*10; scoreEl.textContent=Math.floor(score); difficulty=Math.min(1, elapsed/95 + score/1800); speed=280+difficulty*340;
   dino.vy += 1900*dt; dino.y += dino.vy*dt;
   if(dino.y >= ground-dino.h){ dino.y = ground-dino.h; dino.vy = 0; dino.on = true; if(dino.duckHold) setDuck(true); else setDuck(false); } else { dino.on = false; }
   nextSpawn -= dt; if(nextSpawn <= 0) spawnObstacle();

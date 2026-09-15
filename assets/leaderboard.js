@@ -1,9 +1,17 @@
 (() => {
   const USER_KEY = 'arcade_username';
   const API = '/.netlify/functions/leaderboard';
+  const PINNED = { username: 'ez noob', score: 50000, pinned: true };
 
   function cleanName(value) {
     return String(value || '').normalize('NFKC').replace(/[^\p{L}\p{N}_. -]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 18);
+  }
+
+
+  function withPinned(list, sort = 'desc') {
+    const normalized = Array.isArray(list) ? list.filter(x => String(x?.username || '').toLowerCase() !== PINNED.username) : [];
+    normalized.sort((a,b) => sort === 'asc' ? Number(a.score)-Number(b.score) : Number(b.score)-Number(a.score));
+    return [PINNED, ...normalized].slice(0, 20);
   }
 
   function getUsername() {
@@ -40,10 +48,12 @@
     else if ((lower && score < existing.score) || (!lower && score > existing.score)) {
       existing.score = score; existing.updatedAt = Date.now(); existing.username = username;
     }
+    board = board.filter(x => String(x.username || '').toLowerCase() !== PINNED.username);
     board.sort((a,b) => lower ? a.score-b.score : b.score-a.score);
-    board = board.slice(0, 20);
-    localStorage.setItem(key, JSON.stringify(board));
-    return { leaderboard: board, rank: board.findIndex(x => x.username.toLowerCase() === username.toLowerCase()) + 1, local: true };
+    board = [PINNED, ...board].slice(0, 20);
+    localStorage.setItem(key, JSON.stringify(board.filter(x => !x.pinned)));
+    const rank = username.toLowerCase() === PINNED.username ? 1 : board.findIndex(x => x.username.toLowerCase() === username.toLowerCase()) + 1;
+    return { leaderboard: board, rank, local: true };
   }
 
   async function submit(game, score, sort) {
@@ -95,20 +105,20 @@
     const sort = options.sort === 'asc' ? 'asc' : 'desc';
     const title = options.title || 'Kết quả';
     const suffix = options.suffix || '';
-    const earnedCoins = window.ArcadeEconomy?.awardFromGame(game, score) || 0;
+    const earnedCoins = options.awardCoins === false ? 0 : (window.ArcadeEconomy?.awardFromGame(game, score) || 0);
     const modal = ensureModal();
     const status = modal.querySelector('#leaderboardStatus');
     const rows = modal.querySelector('#leaderboardRows');
     modal.querySelector('#leaderboardTitle').textContent = title;
-    status.textContent = `Điểm của ${getUsername()}: ${Math.round(score).toLocaleString('vi-VN')}${suffix}. 🪙 +${earnedCoins} coin. Đang cập nhật...`;
+    status.textContent = `Điểm của ${getUsername()}: ${Math.round(score).toLocaleString('vi-VN')}${suffix}.${options.awardCoins===false?'':` 🪙 +${earnedCoins} coin.`} Đang cập nhật...`;
     rows.innerHTML = '<div class="leaderboard-loading">Đang tải bảng xếp hạng...</div>';
     modal.classList.remove('hidden');
     const result = await submit(game, score, sort);
-    const list = Array.isArray(result.leaderboard) ? result.leaderboard : [];
+    const list = withPinned(result.leaderboard, sort);
     const me = getUsername().toLowerCase();
     status.textContent = result.local
-      ? `🪙 +${earnedCoins} coin • Bảng xếp hạng trên thiết bị này • Hạng: #${result.rank || '—'}`
-      : `🪙 +${earnedCoins} coin • Đã lưu online • Hạng: #${result.rank || '—'}`;
+      ? `${options.awardCoins===false?'':`🪙 +${earnedCoins} coin • `}Bảng xếp hạng trên thiết bị này • Hạng: #${result.rank || '—'}`
+      : `${options.awardCoins===false?'':`🪙 +${earnedCoins} coin • `}Đã lưu online • Hạng: #${getUsername().toLowerCase() === PINNED.username ? 1 : (result.rank || '—')}`;
     rows.innerHTML = list.length ? list.slice(0, 10).map((item, i) => `
       <div class="leaderboard-row ${String(item.username).toLowerCase() === me ? 'me' : ''}">
         <span class="rank">${i < 3 ? ['🥇','🥈','🥉'][i] : '#' + (i+1)}</span>
