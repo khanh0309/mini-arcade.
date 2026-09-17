@@ -1,4 +1,4 @@
-const CACHE='mini-arcade-v10-chicken-collision-owner10m';
+const CACHE='mini-arcade-v11-mobile-dpad-dino-polish';
 const CORE=[
   './','./index.html','./games.json','./assets/styles.css','./assets/app.js','./assets/game-shell.css','./assets/audio.js','./assets/economy.js','./assets/leaderboard.js','./assets/skins.js','./assets/shop.js','./manifest.webmanifest','./icon-192.png','./icon-512.png',
   './games/snake/','./games/snake/index.html','./games/snake/game.js',

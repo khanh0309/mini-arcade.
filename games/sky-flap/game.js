@@ -36,15 +36,40 @@ function drawBird(){
   g.save();
   g.translate(bird.x,bird.y);
   g.rotate(Math.max(-.45,Math.min(.65,bird.vy/650)));
-  const wing= Math.sin(wingTick)*8 - Math.min(0,bird.vy*.015);
-  g.fillStyle=s.tail; g.beginPath(); g.moveTo(-16,0); g.lineTo(-28,-9); g.lineTo(-26,7); g.closePath(); g.fill();
-  g.fillStyle=s.wingBack; g.beginPath(); g.ellipse(-3,wing*0.35,11,16,Math.PI/5,0,Math.PI*2); g.fill();
+  const flapPhase=Math.sin(wingTick);
+  const wingLift=flapPhase*9 - Math.min(0,bird.vy*.014);
+
+  // Đuôi 2 lớp.
+  g.fillStyle=s.tail;
+  g.beginPath(); g.moveTo(-14,1); g.lineTo(-30,-10); g.lineTo(-25,1); g.lineTo(-31,10); g.closePath(); g.fill();
+
+  // Cánh sau: vẽ lớn và có 3 đầu lông để nhìn rõ khi flap.
+  g.save(); g.translate(-5,-1); g.rotate(-0.25 + flapPhase*.48);
+  g.fillStyle=s.wingBack;
+  g.beginPath();
+  g.moveTo(2,5); g.quadraticCurveTo(-7,-5,-8,-21); g.quadraticCurveTo(1,-17,7,-8);
+  g.lineTo(10,-18); g.lineTo(13,-7); g.lineTo(18,-13); g.quadraticCurveTo(18,0,7,10); g.closePath(); g.fill();
+  g.strokeStyle='rgba(65,61,75,.25)'; g.lineWidth=1.4;
+  g.beginPath(); g.moveTo(0,2); g.lineTo(5,-11); g.moveTo(4,4); g.lineTo(11,-8); g.stroke();
+  g.restore();
+
+  // Thân.
   const body=g.createRadialGradient(-3,-7,4,0,0,24); body.addColorStop(0,s.body1); body.addColorStop(1,s.body2);
   g.fillStyle=body; g.beginPath(); g.ellipse(0,0,18,15,0,0,Math.PI*2); g.fill();
   g.fillStyle='rgba(255,255,255,.45)'; g.beginPath(); g.ellipse(3,-4,6,4,0,0,Math.PI*2); g.fill();
-  g.fillStyle='#fff2c3'; g.beginPath(); g.ellipse(1,4,8,7,0,0,Math.PI*2); g.fill();
-  g.fillStyle=s.wingFront; g.beginPath(); g.ellipse(1,wing*0.42,10,14,Math.PI/7,0,Math.PI*2); g.fill();
-  g.fillStyle=s.head; g.beginPath(); g.arc(10,-10,10,0,Math.PI*2); g.fill();
+  g.fillStyle='#fff2c3'; g.beginPath(); g.ellipse(2,5,8,7,0,0,Math.PI*2); g.fill();
+
+  // Cánh trước: cánh thứ hai rõ ràng hơn, chuyển động ngược nhẹ so với cánh sau.
+  g.save(); g.translate(0,2); g.rotate(0.18 - flapPhase*.42);
+  g.fillStyle=s.wingFront;
+  g.beginPath();
+  g.moveTo(-5,-2); g.quadraticCurveTo(2,-10,13,-13); g.lineTo(10,-5); g.lineTo(17,-7); g.lineTo(12,1); g.lineTo(18,4); g.quadraticCurveTo(7,11,-5,8); g.closePath(); g.fill();
+  g.strokeStyle='rgba(78,61,54,.23)'; g.lineWidth=1.3;
+  g.beginPath(); g.moveTo(1,3); g.lineTo(11,-5); g.moveTo(3,6); g.lineTo(13,2); g.stroke();
+  g.restore();
+
+  // Đầu + mặt.
+  g.fillStyle=s.head; g.beginPath(); g.arc(10,-10,10.5,0,Math.PI*2); g.fill();
   g.fillStyle=s.cheek; g.beginPath(); g.arc(13,-7,3,0,Math.PI*2); g.fill();
   g.fillStyle='#fff'; g.beginPath(); g.arc(14,-13,3.8,0,Math.PI*2); g.fill();
   g.fillStyle=s.eye; g.beginPath(); g.arc(15,-13,1.6,0,Math.PI*2); g.fill();

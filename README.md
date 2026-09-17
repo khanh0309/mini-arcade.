@@ -1,4 +1,4 @@
-# Mini Arcade v2.5.2
+# Mini Arcade v2.5.3
 
 Mini Arcade chạy trên Netlify, gồm 8 game và bảng xếp hạng online theo username.
 
@@ -107,3 +107,14 @@ Nếu chưa cấu hình Render, **Practice vs CPU** và **Local 2 Players** vẫ
 - Thêm input cooldown 75 ms để không thể dịch chuyển qua nhiều lane trong cùng một frame.
 - Bỏ khoảng "bất tử" sau khi bắt đầu/qua đường; hàng xuất phát không có xe nên không cần invincibility.
 - Giữ nguyên cân bằng dễ hơn ở đầu game và difficulty curve tăng dần.
+
+
+## V2.5.3 — Mobile controls + Dino/Sky Flap polish
+- Tăng nhẹ kích thước vùng chơi trên desktop và tận dụng sát chiều ngang hơn trên điện thoại.
+- Snake, Chicken Crossing và Road Rush đổi nút cảm ứng 4 hướng sang **D-pad hình chữ thập**.
+- Block Drop dùng D-pad chữ thập cho trái/xoay/phải/xuống và tách nút **Thả xuống** riêng.
+- Arcade Football đổi cụm điều khiển mobile sang bố cục chữ thập dễ bấm hơn.
+- Dino Run thêm **jump buffer 160 ms**: bấm nhảy hơi sớm trước khi đáp đất vẫn tự nhảy tiếp ngay khi chạm đất.
+- Dino Run tăng khoảng cách tối thiểu giữa chướng ngại vật để tránh tình huống 2 xương rồng gần nhau tạo pha chết bắt buộc, nhưng tốc độ vẫn tăng dần theo thời gian.
+- Vẽ lại Dino chi tiết hơn: mõm, cổ, tay, móng, chân, đuôi và gai lưng rõ hơn.
+- Sky Flap có hai cánh rõ ràng hơn, có lông cánh và animation flap dễ nhìn.
