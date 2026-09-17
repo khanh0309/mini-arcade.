@@ -1,5 +1,6 @@
 (() => {
-  const W = 960, H = 540, FLOOR = 478, GOAL_TOP = 338, PLAYER_R = 31, BALL_R = 18;
+  const W = 960, H = 540, FIELD_TOP = 112, FLOOR = 478, GOAL_TOP = 338, PLAYER_R = 31, BALL_R = 18;
+  const MATCH_TIME = 60;
   const MOVE_ACCEL = 1550, MAX_SPEED = 315, JUMP_SPEED = 650, PLAYER_GRAVITY = 1780;
   const BALL_GRAVITY = 980, KICK_POWER = 690, KICK_UP = 390;
 
@@ -14,12 +15,18 @@
     s.ball = {x:W/2,y:245,vx:0,vy:0,r:BALL_R,spin:0};
   }
   function createState(){
-    const s={ width:W,height:H,floor:FLOOR,goalTop:GOAL_TOP,players:{},ball:null,score:{left:0,right:0},phase:'countdown',phaseTimer:3.15,winner:null,lastGoal:null };
+    const s={ width:W,height:H,fieldTop:FIELD_TOP,floor:FLOOR,goalTop:GOAL_TOP,players:{},ball:null,score:{left:0,right:0},phase:'countdown',phaseTimer:3.15,winner:null,lastGoal:null,timeLeft:MATCH_TIME,overtime:false };
     resetPositions(s); return s;
+  }
+  function endByClock(s){
+    if(s.score.left>s.score.right){s.winner='left';s.phase='ended';s.phaseTimer=0;return;}
+    if(s.score.right>s.score.left){s.winner='right';s.phase='ended';s.phaseTimer=0;return;}
+    s.overtime=true; // hòa sau 60s => bàn tiếp theo thắng (Golden Goal)
+    s.timeLeft=0;
   }
   function scoreGoal(s,scorer){
     s.score[scorer] += 1; s.lastGoal=scorer;
-    if(s.score[scorer] >= 3){ s.winner=scorer; s.phase='ended'; s.phaseTimer=0; return; }
+    if(s.overtime){ s.winner=scorer; s.phase='ended'; s.phaseTimer=0; return; }
     s.phase='goal'; s.phaseTimer=1.35;
   }
   function collidePlayers(a,b){
@@ -59,7 +66,7 @@
     const b=s.ball; b.vy+=BALL_GRAVITY*dt; b.x+=b.vx*dt; b.y+=b.vy*dt; b.spin+=b.vx*dt*.018;
     b.vx*=Math.pow(.996,dt*60);
     if(b.y+b.r>=FLOOR){ b.y=FLOOR-b.r; if(b.vy>0)b.vy=-b.vy*.68; if(Math.abs(b.vy)<26)b.vy=0; b.vx*=.985; }
-    if(b.y-b.r<20){ b.y=20+b.r; b.vy=Math.abs(b.vy)*.72; }
+    if(b.y-b.r<FIELD_TOP){ b.y=FIELD_TOP+b.r; b.vy=Math.abs(b.vy)*.72; }
 
     const inMouth=b.y+b.r>GOAL_TOP;
     if(inMouth && b.x-b.r<=16){ scoreGoal(s,'right'); return; }
@@ -68,7 +75,6 @@
     if(b.x-b.r<16){ b.x=16+b.r; b.vx=Math.abs(b.vx)*.78; }
     if(b.x+b.r>W-16){ b.x=W-16-b.r; b.vx=-Math.abs(b.vx)*.78; }
 
-    // Crossbar collisions.
     for(const gx of [72,W-72]){
       const dx=b.x-gx, dy=b.y-GOAL_TOP, d=Math.hypot(dx,dy)||1;
       if(d<b.r+8){ const nx=dx/d, ny=dy/d, overlap=b.r+8-d; b.x+=nx*overlap; b.y+=ny*overlap; const v=b.vx*nx+b.vy*ny; if(v<0){b.vx-=1.6*v*nx;b.vy-=1.6*v*ny;} }
@@ -81,6 +87,10 @@
       s.phaseTimer-=dt;
       if(s.phaseTimer<=0){ if(s.phase==='goal') resetPositions(s); s.phase='active'; s.phaseTimer=0; }
       return s;
+    }
+    if(!s.overtime){
+      s.timeLeft=Math.max(0,(s.timeLeft??MATCH_TIME)-dt);
+      if(s.timeLeft<=0){ endByClock(s); if(s.phase==='ended')return s; }
     }
     const L=s.players.left,R=s.players.right;
     applyPlayer(L,inputs?.left||{},dt); applyPlayer(R,inputs?.right||{},dt);
@@ -97,10 +107,9 @@
     const jump=b.y<p.y-44 && Math.abs(b.x-p.x)<115 && p.grounded;
     const facingOK=side==='right'?b.x<p.x:b.x>p.x;
     const kick=Math.abs(b.x-p.x)<90 && Math.abs(b.y-p.y)<80 && facingOK;
-    // Don't own-goal while defending if ball is already behind the player.
     if(defend && Math.abs(b.x-ownGoal)<78) return {left:side==='right',right:side==='left',jump,kick:false};
     return {left,right,jump,kick};
   }
   function cloneState(s){ return JSON.parse(JSON.stringify(s)); }
-  window.FootballPhysics={W,H,FLOOR,GOAL_TOP,PLAYER_R,BALL_R,createState,update,cpuInput,cloneState};
+  window.FootballPhysics={W,H,FIELD_TOP,FLOOR,GOAL_TOP,PLAYER_R,BALL_R,MATCH_TIME,createState,update,cpuInput,cloneState};
 })();

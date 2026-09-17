@@ -1,4 +1,4 @@
-# Mini Arcade v2.5.3
+# Mini Arcade v2.5.4
 
 Mini Arcade chạy trên Netlify, gồm 8 game và bảng xếp hạng online theo username.
 
@@ -10,7 +10,7 @@ Mini Arcade chạy trên Netlify, gồm 8 game và bảng xếp hạng online th
 - Block Drop
 - Road Rush (đua xe vượt chướng ngại vật)
 - Chicken Crossing (đưa gà qua các làn xe)
-- Arcade Football (Practice CPU / Local 2P / Online 1v1, first to 3 goals)
+- Arcade Football (Practice CPU / Local 2P / Online 1v1, trận 60 giây + Golden Goal khi hòa)
 
 ## Tính năng mới
 - Nhập username khi vào Arcade; username được nhớ trên thiết bị và có thể đổi.
@@ -75,7 +75,7 @@ Leaderboard này phù hợp cho nhóm bạn chơi thử, nhưng điểm được
 
 ## V2.5 — Arcade Football Online 1v1
 - Thêm game thứ 8: **Arcade Football**.
-- Luật: **ai ghi 3 bàn trước thắng**, không dùng đồng hồ trận đấu.
+- Luật: **trận 60 giây; hết giờ ai nhiều bàn hơn thắng, hòa thì Golden Goal**, không dùng đồng hồ trận đấu.
 - `Practice vs CPU`: chơi ngay, không cần backend.
 - `Local 2 Players`: 2 người cùng bàn phím/máy.
 - `Online 1v1`: Create Room, Join Room bằng mã 4 ký tự, Quick Match và Rematch.
@@ -109,7 +109,7 @@ Nếu chưa cấu hình Render, **Practice vs CPU** và **Local 2 Players** vẫ
 - Giữ nguyên cân bằng dễ hơn ở đầu game và difficulty curve tăng dần.
 
 
-## V2.5.3 — Mobile controls + Dino/Sky Flap polish
+## V2.5.4 — Mobile controls + Dino/Sky Flap polish
 - Tăng nhẹ kích thước vùng chơi trên desktop và tận dụng sát chiều ngang hơn trên điện thoại.
 - Snake, Chicken Crossing và Road Rush đổi nút cảm ứng 4 hướng sang **D-pad hình chữ thập**.
 - Block Drop dùng D-pad chữ thập cho trái/xoay/phải/xuống và tách nút **Thả xuống** riêng.
@@ -118,3 +118,10 @@ Nếu chưa cấu hình Render, **Practice vs CPU** và **Local 2 Players** vẫ
 - Dino Run tăng khoảng cách tối thiểu giữa chướng ngại vật để tránh tình huống 2 xương rồng gần nhau tạo pha chết bắt buộc, nhưng tốc độ vẫn tăng dần theo thời gian.
 - Vẽ lại Dino chi tiết hơn: mõm, cổ, tay, móng, chân, đuôi và gai lưng rõ hơn.
 - Sky Flap có hai cánh rõ ràng hơn, có lông cánh và animation flap dễ nhìn.
+
+
+## V2.5.4 – Football 60s + Stadium Crowd
+- Arcade Football đổi sang trận 60 giây.
+- Hòa sau 60 giây sẽ vào Golden Goal, bàn tiếp theo thắng.
+- Thêm khán đài, khán giả chuyển động và tiếng cổ vũ nhẹ; ghi bàn sẽ có tiếng reo lớn hơn.
+- Online server giữ quyền quyết định đồng hồ/trạng thái trận để hai máy không lệch thời gian.

@@ -81,7 +81,7 @@
     "name": "Arcade Football",
     "icon": "⚽",
     "tag": "Online 1v1",
-    "description": "Đá bóng 1v1: Practice CPU, 2 người cùng máy hoặc online. Ai ghi 3 bàn trước thắng.",
+    "description": "Đá bóng 1v1: Practice CPU, 2 người cùng máy hoặc online. Đấu 60 giây, ai ghi nhiều bàn hơn thắng; hòa thì Golden Goal.",
     "path": "./games/arcade-football/",
     "accent": "#55d47c",
     "storageKey": "arcade_best_football",
